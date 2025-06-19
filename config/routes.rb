@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   delete "sessions", to: "sessions#destroy" # Logout
   get "sessions", to: "sessions#show"       # Current user
 
+  # API routes
+  namespace :api do
+    resources :files, only: [:index, :create]
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -69,18 +69,15 @@ class Api::FilesController < ApplicationController
   private
 
   def authenticate_user!
-    token = request.headers['Authorization']&.sub(/^Bearer /, '')
+    token = request.headers['Authorization']
 
     if token.blank?
       render json: { error: 'Authorization token required' }, status: :unauthorized
       return
     end
 
-    # Parse the simple token format: "token_#{user_id}_#{timestamp}"
-    if token.match(/^token_(\d+)_\d+$/)
-      user_id = $1.to_i
-      @current_user = User.find_by(id: user_id)
-    end
+    # Use JWT service to extract user from token
+    @current_user = JwtService.user_from_token(token)
 
     unless @current_user
       render json: { error: 'Invalid or expired token' }, status: :unauthorized

@@ -11,11 +11,24 @@ class SessionsController < ApplicationController
 
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
-      render json: { 
-        success: true, 
-        user: { id: user.id, email: user.email },
-        token: generate_token(user)
-      }, status: :ok
+      access_token = JwtService.encode(user)
+      refresh_token = JwtService.encode_refresh_token(user)
+
+      if access_token
+        render json: { 
+          success: true, 
+          user: { id: user.id, email: user.email },
+          access_token: access_token,
+          refresh_token: refresh_token,
+          token_type: 'Bearer',
+          expires_in: 24.hours.to_i
+        }, status: :ok
+      else
+        render json: { 
+          success: false, 
+          error: 'Failed to generate authentication token' 
+        }, status: :internal_server_error
+      end
     else
       render json: { 
         success: false, 
@@ -33,11 +46,24 @@ class SessionsController < ApplicationController
   # GET /sessions (current user)
   def show
     if current_user
-      render json: { 
-        success: true, 
-        user: { id: current_user.id, email: current_user.email },
-        token: generate_token(current_user)
-      }, status: :ok
+      access_token = JwtService.encode(current_user)
+      refresh_token = JwtService.encode_refresh_token(current_user)
+
+      if access_token
+        render json: { 
+          success: true, 
+          user: { id: current_user.id, email: current_user.email },
+          access_token: access_token,
+          refresh_token: refresh_token,
+          token_type: 'Bearer',
+          expires_in: 24.hours.to_i
+        }, status: :ok
+      else
+        render json: { 
+          success: false, 
+          error: 'Failed to generate authentication token' 
+        }, status: :internal_server_error
+      end
     else
       render json: { success: false, error: 'Not authenticated' }, status: :unauthorized
     end
@@ -52,8 +78,4 @@ class SessionsController < ApplicationController
     nil
   end
 
-  def generate_token(user)
-    # Simple token generation - in production, use JWT or similar
-    "token_#{user.id}_#{Time.current.to_i}"
-  end
 end

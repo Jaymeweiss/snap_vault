@@ -16,8 +16,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert response_data['success']
     assert_equal user.id, response_data['user']['id']
     assert_equal user.email, response_data['user']['email']
-    assert_not_nil response_data['token']
-    assert_match /^token_#{user.id}_\d+$/, response_data['token']
+    assert_not_nil response_data['access_token']
+    assert_not_nil response_data['refresh_token']
+    assert_equal 'Bearer', response_data['token_type']
+    assert_equal 24.hours.to_i, response_data['expires_in']
+
+    # Verify JWT token format (3 parts separated by dots)
+    assert_equal 3, response_data['access_token'].split('.').length
 
     # Verify session was set
     assert_equal user.id, session[:user_id]
@@ -144,8 +149,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert response_data['success']
     assert_equal user.id, response_data['user']['id']
     assert_equal user.email, response_data['user']['email']
-    assert_not_nil response_data['token']
-    assert_match /^token_#{user.id}_\d+$/, response_data['token']
+    assert_not_nil response_data['access_token']
+    assert_not_nil response_data['refresh_token']
+    assert_equal 'Bearer', response_data['token_type']
+    assert_equal 24.hours.to_i, response_data['expires_in']
+
+    # Verify JWT token format (3 parts separated by dots)
+    assert_equal 3, response_data['access_token'].split('.').length
   end
 
   test "should return unauthorized when not logged in" do

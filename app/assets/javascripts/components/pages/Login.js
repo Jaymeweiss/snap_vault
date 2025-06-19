@@ -39,7 +39,7 @@ var Login = createReactClass({
       })
       .then(function (data) {
         if (data.success) {
-          self.props.onLogin(data.token);
+          self.props.onLogin(data.access_token);
         } else {
           self.setState({ error: data.error || "Login failed" });
         }

@@ -3,7 +3,7 @@ require "test_helper"
 class Api::FilesControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:one)
-    @token = "token_#{@user.id}_#{Time.current.to_i}"
+    @token = JwtService.encode(@user)
     @auth_headers = { "Authorization" => "Bearer #{@token}" }
   end
 

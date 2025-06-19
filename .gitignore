@@ -56,8 +56,8 @@ yarn-debug.log*
 /coverage/
 
 # Ignore IDE and editor files
-#.vscode/
-#.idea/
+.vscode/
+.idea/
 *.swp
 *.swo
 *~

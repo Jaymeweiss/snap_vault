@@ -32,7 +32,7 @@ class UploadedFile < ApplicationRecord
   validate :allowed_file_extension
 
   def download_url
-    Rails.application.routes.url_helpers.rails_blob_path(file, disposition: "attachment") if file.attached?
+    Rails.application.routes.url_helpers.rails_blob_path(file, disposition: "attachment", only_path: true) if file.attached?
   end
 
   def preview_url
@@ -41,7 +41,8 @@ class UploadedFile < ApplicationRecord
 
     Rails.application.routes.url_helpers.rails_representation_path(
       file.variant(resize_to_limit: [200, 200]), 
-      disposition: "inline"
+      disposition: "inline",
+      only_path: true
     )
   end
 

@@ -22,11 +22,11 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         {token ? (
-          <>
+          <React.Fragment>
             <Route path="/upload" element={<Upload token={token} onLogout={handleLogout} />} />
             <Route path="/files" element={<FileList token={token} onLogout={handleLogout} />} />
             <Route path="*" element={<Navigate to="/upload" replace />} />
-          </>
+          </React.Fragment>
         ) : (
           <Route path="*" element={<Navigate to="/login" replace />} />
         )}

@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  filename: "document.pdf"
+  size: 1048576  # 1MB
+  content_type: "application/pdf"
+  user: one
+
+two:
+  filename: "image.jpg"
+  size: 2097152  # 2MB
+  content_type: "image/jpeg"
+  user: two
+
+three:
+  filename: "text_file.txt"
+  size: 1024     # 1KB
+  content_type: "text/plain"
+  user: one

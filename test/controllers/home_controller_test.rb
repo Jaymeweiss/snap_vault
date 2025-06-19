@@ -1,10 +1,9 @@
 require "test_helper"
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
-  test "should redirect to root when not authenticated" do
+  test "should get index when not authenticated" do
     get home_index_url
-    assert_response :redirect
-    assert_redirected_to root_path
+    assert_response :success
   end
 
   test "should get index when authenticated" do

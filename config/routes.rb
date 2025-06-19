@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get "home/index"
 
+  # Set root route
+  root "home#index"
+
   # Authentication routes
   post "sessions", to: "sessions#create"    # Login
   delete "sessions", to: "sessions#destroy" # Logout

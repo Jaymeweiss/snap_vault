@@ -1,6 +1,9 @@
 class SessionsController < ApplicationController
   # Skip CSRF protection for API endpoints
   skip_before_action :verify_authenticity_token
+  # Skip login requirement for sessions controller
+  skip_before_action :require_login
+
 
   # POST /sessions (login)
   def create

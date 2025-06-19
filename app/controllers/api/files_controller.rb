@@ -1,5 +1,6 @@
 class Api::FilesController < ApplicationController
   skip_before_action :verify_authenticity_token
+  skip_before_action :require_login
   before_action :authenticate_user!
 
   # GET /api/files

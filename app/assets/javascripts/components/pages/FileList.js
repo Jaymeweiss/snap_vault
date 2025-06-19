@@ -13,6 +13,10 @@ var FileList = createReactClass({
 
   fetchFiles: function () {
     var self = this;
+    console.log(
+      "FileList: Starting to fetch files with token:",
+      this.props.token,
+    );
 
     fetch("/api/files", {
       headers: {
@@ -23,20 +27,23 @@ var FileList = createReactClass({
       },
     })
       .then(function (response) {
+        console.log("FileList: API response status:", response.status);
         if (!response.ok) {
-          throw new Error("Failed to fetch files");
+          throw new Error("Failed to fetch files - Status: " + response.status);
         }
         return response.json();
       })
       .then(function (data) {
+        console.log("FileList: Received files data:", data);
         self.setState({
           files: data,
           loading: false,
         });
       })
       .catch(function (error) {
+        console.error("FileList: Error fetching files:", error);
         self.setState({
-          error: "Could not load files",
+          error: "Could not load files: " + error.message,
           loading: false,
         });
       });
@@ -51,12 +58,19 @@ var FileList = createReactClass({
   },
 
   render: function () {
+    console.log("FileList: Rendering with state:", this.state);
+
     if (this.state.loading) {
       return React.createElement("p", null, "Loading files...");
     }
 
     if (this.state.error) {
-      return React.createElement("p", null, this.state.error);
+      return React.createElement(
+        "div",
+        null,
+        React.createElement("p", { style: { color: "red" } }, this.state.error),
+        React.createElement("button", { onClick: this.fetchFiles }, "Retry"),
+      );
     }
 
     if (this.state.files.length === 0) {

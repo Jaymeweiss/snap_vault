@@ -7,11 +7,30 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate login
-    if (email && password) {
-      onLogin('fake-token');
-    } else {
-      setError('Invalid email or password');
+    setError(null);
+
+    try {
+      const response = await fetch('/sessions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        onLogin(data.token);
+      } else {
+        setError(data.error || 'Login failed');
+      }
+    } catch (error) {
+      setError('Network error. Please try again.');
+      console.error('Login error:', error);
     }
   };
 
